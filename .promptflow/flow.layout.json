@@ -2,44 +2,74 @@
   "orientation": "Vertical",
   "nodeLayouts": {
     "inputs": {
-      "x": 12,
-      "y": 62,
+      "x": 542.5,
+      "y": 42,
       "index": -1
     },
     "outputs": {
-      "x": 12,
-      "y": 722,
+      "x": 297.5,
+      "y": 1114,
       "index": -1
     },
     "extract_query_from_question": {
-      "x": 67.5,
-      "y": 172,
+      "x": 315,
+      "y": 176,
       "height": 75,
       "index": 0
     },
     "get_wiki_url": {
-      "x": 67.5,
-      "y": 282,
+      "x": 315,
+      "y": 310,
       "height": 75,
       "index": 1
     },
     "search_result_from_url": {
-      "x": 67.5,
-      "y": 392,
+      "x": 315,
+      "y": 444,
       "height": 75,
       "index": 2
     },
     "process_search_result": {
-      "x": 67.5,
-      "y": 502,
+      "x": 315,
+      "y": 578,
       "height": 75,
       "index": 3
     },
     "augmented_chat": {
-      "x": 12,
-      "y": 612,
+      "x": 140,
+      "y": 712,
       "height": 75,
       "index": 4
+    },
+    "groundedness_eval": {
+      "x": 140,
+      "y": 846,
+      "index": -1
+    },
+    "relevance_eval": {
+      "x": 470,
+      "y": 846,
+      "index": -1
+    },
+    "coherence_eval": {
+      "x": 800,
+      "y": 846,
+      "index": -1
+    },
+    "fluency_eval": {
+      "x": 1130,
+      "y": 846,
+      "index": -1
+    },
+    "process_independent_metrics": {
+      "x": 480,
+      "y": 846,
+      "index": 5
+    },
+    "process_derived_metrics": {
+      "x": 305,
+      "y": 980,
+      "index": 6
     }
   },
   "viewport": {

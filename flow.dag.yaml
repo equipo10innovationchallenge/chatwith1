@@ -1,5 +1,7 @@
 id: chat_with_wikipedia
 name: Chat with Wikipedia
+environment:
+  python_requirements_txt: requirements.txt
 inputs:
   chat_history:
     type: list
@@ -47,10 +49,8 @@ nodes:
       type: text
     question: ${inputs.question}
     chat_history: ${inputs.chat_history}
-  provider: Serverless
-  connection: ConexionPrueba2
+  connection: my_serverless_connection
   api: chat
-  module: promptflow.tools.openai
   use_variants: false
 - name: get_wiki_url
   type: python
@@ -92,10 +92,8 @@ nodes:
     question: ${inputs.question}
     chat_history: ${inputs.chat_history}
     contexts: ${process_search_result.output}
-  provider: Serverless
-  connection: ConexionPrueba2
+  connection: my_serverless_connection
   api: chat
-  module: promptflow.tools.openai
   use_variants: false
 - name: process_independent_metrics
   type: python
@@ -103,10 +101,10 @@ nodes:
     type: code
     path: process_independent_metrics.py
   inputs:
+    connection: my_serverless_connection
     answer: ${augmented_chat.output}
     context: ${process_search_result.output}
     question: ${inputs.question}
-    connection: ConexionPrueba2
   use_variants: false
 - name: process_derived_metrics
   type: python
@@ -114,10 +112,7 @@ nodes:
     type: code
     path: process_derived_metrics.py
   inputs:
+    connection: my_serverless_connection
     answer: ${augmented_chat.output}
     independent_metrics: ${process_independent_metrics.output}
-    connection: ConexionPrueba2
   use_variants: false
-node_variants: {}
-environment:
-  python_requirements_txt: requirements.txt

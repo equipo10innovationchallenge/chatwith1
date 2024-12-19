@@ -1,8 +1,8 @@
-from promptflow import tool
+from promptflow import tool, log_metric
 from typing import Dict
 import numpy as np
 import re
-from promptflow.connections import AzureOpenAIConnection
+from promptflow.connections import CustomConnection
 import json
 
 def calculate_metric_score(response: str) -> float:
@@ -18,7 +18,7 @@ def calculate_metric_score(response: str) -> float:
         return np.nan
 
 @tool
-def process_independent_metrics(answer: str, context: str, question: str, connection: AzureOpenAIConnection) -> Dict:
+def process_independent_metrics(answer: str, context: str, question: str, connection: CustomConnection) -> Dict:
     """
     Process independent metrics: groundedness, relevance, and coherence.
     
@@ -26,7 +26,7 @@ def process_independent_metrics(answer: str, context: str, question: str, connec
         answer: The generated answer
         context: The context used to generate the answer
         question: The original question
-        connection: Azure OpenAI connection
+        connection: The serverless connection to use
     
     Returns:
         Dictionary containing the metric scores
@@ -64,7 +64,7 @@ def process_independent_metrics(answer: str, context: str, question: str, connec
     """
     
     try:
-        # Get scores using Azure OpenAI
+        # Get scores using serverless connection
         groundedness_response = connection.chat(
             messages=[{"role": "user", "content": groundedness_prompt}],
             temperature=0
@@ -85,14 +85,19 @@ def process_independent_metrics(answer: str, context: str, question: str, connec
             "coherence": calculate_metric_score(coherence_response)
         }
         
-        # Add pass rates
-        for metric in metrics.keys():
-            metrics[f"{metric}_pass_rate"] = 1 if metrics[metric] >= 3 else 0
+        # Add pass rates and log metrics
+        for metric, score in metrics.items():
+            pass_rate = 1 if score >= 3 else 0
+            metrics[f"{metric}_pass_rate"] = pass_rate
+            
+            # Log individual metrics
+            log_metric(f"{metric}_score", score)
+            log_metric(f"{metric}_pass_rate", pass_rate)
             
         return metrics
         
     except Exception as e:
-        return {
+        error_metrics = {
             "error": str(e),
             "groundedness": np.nan,
             "relevance": np.nan,
@@ -101,3 +106,10 @@ def process_independent_metrics(answer: str, context: str, question: str, connec
             "relevance_pass_rate": 0,
             "coherence_pass_rate": 0
         }
+        
+        # Log error metrics
+        for metric, value in error_metrics.items():
+            if metric != "error":
+                log_metric(metric, value)
+                
+        return error_metrics

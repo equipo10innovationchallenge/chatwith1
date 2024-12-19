@@ -1,17 +1,18 @@
 from promptflow import tool
 from typing import Dict
 import numpy as np
-from promptflow.connections import AzureOpenAIConnection
+import re
+from promptflow.connections import CustomConnection
 
 @tool
-def process_derived_metrics(answer: str, independent_metrics: Dict, connection: AzureOpenAIConnection) -> Dict:
+def process_derived_metrics(answer: str, independent_metrics: Dict, connection: CustomConnection) -> Dict:
     """
     Process derived metrics: fluency and similarity, using independent metrics as input.
     
     Args:
         answer: The generated answer
         independent_metrics: Results from independent metrics processing
-        connection: Azure OpenAI connection
+        connection: The serverless connection to use
     
     Returns:
         Dictionary containing all metric scores

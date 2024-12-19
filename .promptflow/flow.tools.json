@@ -102,6 +102,57 @@
       "name": "augmented_chat.jinja2",
       "source": "augmented_chat.jinja2",
       "toolId": "augmented_chat.jinja2"
+    },
+    "process_independent_metrics.py": {
+      "type": "python",
+      "inputs": {
+        "answer": {
+          "type": [
+            "string"
+          ]
+        },
+        "context": {
+          "type": [
+            "string"
+          ]
+        },
+        "question": {
+          "type": [
+            "string"
+          ]
+        },
+        "connection": {
+          "type": [
+            "CustomConnection"
+          ]
+        }
+      },
+      "description": "Process independent metrics: groundedness, relevance, and coherence.\n\nArgs:\n    answer: The generated answer\n    context: The context used to generate the answer\n    question: The original question\n    connection: The serverless connection to use\n\nReturns:\n    Dictionary containing the metric scores",
+      "source": "process_independent_metrics.py",
+      "function": "process_independent_metrics"
+    },
+    "process_derived_metrics.py": {
+      "type": "python",
+      "inputs": {
+        "answer": {
+          "type": [
+            "string"
+          ]
+        },
+        "independent_metrics": {
+          "type": [
+            "object"
+          ]
+        },
+        "connection": {
+          "type": [
+            "CustomConnection"
+          ]
+        }
+      },
+      "description": "Process derived metrics: fluency and similarity, using independent metrics as input.\n\nArgs:\n    answer: The generated answer\n    independent_metrics: Results from independent metrics processing\n    connection: The serverless connection to use\n\nReturns:\n    Dictionary containing all metric scores",
+      "source": "process_derived_metrics.py",
+      "function": "process_derived_metrics"
     }
   }
 }
