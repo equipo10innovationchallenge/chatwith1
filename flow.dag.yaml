@@ -106,6 +106,7 @@ nodes:
     context: ${process_search_result.output}
     question: ${inputs.question}
   use_variants: false
+  aggregation: true
 - name: process_derived_metrics
   type: python
   source:
@@ -116,3 +117,4 @@ nodes:
     answer: ${augmented_chat.output}
     independent_metrics: ${process_independent_metrics.output}
   use_variants: false
+  aggregation: true

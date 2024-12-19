@@ -2,7 +2,7 @@ from promptflow import tool, log_metric
 from typing import Dict
 import numpy as np
 import re
-from promptflow.connections import CustomConnection
+from promptflow.connections import ServerlessConnection
 import json
 
 def calculate_metric_score(response: str) -> float:
@@ -18,7 +18,7 @@ def calculate_metric_score(response: str) -> float:
         return np.nan
 
 @tool
-def process_independent_metrics(answer: str, context: str, question: str, connection: CustomConnection) -> Dict:
+def process_independent_metrics(answer: str, context: str, question: str, connection: ServerlessConnection) -> Dict:
     """
     Process independent metrics: groundedness, relevance, and coherence.
     

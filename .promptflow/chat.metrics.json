@@ -1,0 +1,12 @@
+{
+  "groundedness": NaN,
+  "relevance": NaN,
+  "coherence": NaN,
+  "groundedness_pass_rate": 0,
+  "relevance_pass_rate": 0,
+  "coherence_pass_rate": 0,
+  "fluency_score": NaN,
+  "fluency_pass_rate": 0,
+  "similarity_score": NaN,
+  "similarity_pass_rate": 0
+}

@@ -1,11 +1,11 @@
-from promptflow import tool
+from promptflow import tool, log_metric
 from typing import Dict
 import numpy as np
 import re
-from promptflow.connections import CustomConnection
+from promptflow.connections import ServerlessConnection
 
 @tool
-def process_derived_metrics(answer: str, independent_metrics: Dict, connection: CustomConnection) -> Dict:
+def process_derived_metrics(answer: str, independent_metrics: Dict, connection: ServerlessConnection) -> Dict:
     """
     Process derived metrics: fluency and similarity, using independent metrics as input.
     
@@ -65,19 +65,34 @@ def process_derived_metrics(answer: str, independent_metrics: Dict, connection: 
         else:
             similarity_score = np.nan
             
+        # Log fluency metrics
+        fluency_pass_rate = 1 if fluency_score >= 3 else 0
+        log_metric("fluency_score", fluency_score)
+        log_metric("fluency_pass_rate", fluency_pass_rate)
+        
+        # Log similarity metrics
+        similarity_pass_rate = 1 if similarity_score >= 3 else 0
+        log_metric("similarity_score", similarity_score)
+        log_metric("similarity_pass_rate", similarity_pass_rate)
+        
+        # Log individual metric contributions to similarity
+        for metric, weight in weights.items():
+            if metric in valid_scores:
+                log_metric(f"{metric}_contribution", valid_scores[metric] * weight / total_weight)
+            
         # Combine all metrics
         final_metrics = {
             **independent_metrics,
             'fluency': fluency_score,
-            'fluency_pass_rate': 1 if fluency_score >= 3 else 0,
+            'fluency_pass_rate': fluency_pass_rate,
             'similarity': similarity_score,
-            'similarity_pass_rate': 1 if similarity_score >= 3 else 0
+            'similarity_pass_rate': similarity_pass_rate
         }
         
         return final_metrics
         
     except Exception as e:
-        return {
+        error_metrics = {
             **independent_metrics,
             'error': str(e),
             'fluency': np.nan,
@@ -85,3 +100,11 @@ def process_derived_metrics(answer: str, independent_metrics: Dict, connection: 
             'similarity': np.nan,
             'similarity_pass_rate': 0
         }
+        
+        # Log error metrics
+        log_metric("fluency_score", np.nan)
+        log_metric("fluency_pass_rate", 0)
+        log_metric("similarity_score", np.nan)
+        log_metric("similarity_pass_rate", 0)
+        
+        return error_metrics
